@@ -6,7 +6,7 @@ const textoResultado = document.querySelector(".texto-resultado");
 
 const perguntas = [
     {
-        enunciado: " O que está mais relacionado ao conceito de "moda sustentável"?",
+        enunciado: "1. O que está mais relacionado ao conceito de 'moda sustentável'?",
         alternativas: [
             {
                 texto: "Roupas descartáveis",
@@ -19,7 +19,7 @@ const perguntas = [
         ]
     },
     {
-        enunciado: "O que está mais alinhado com a moda consciente?",
+        enunciado: "2. O que está mais alinhado com a moda consciente?",
         alternativas: [
             {
                 texto: "Comprar roupas em brechós e reaproveitar peças",
@@ -32,7 +32,7 @@ const perguntas = [
         ]
     },
     {
-        enunciado: " O que é mais comum em marcas sustentáveis de moda?",
+        enunciado: "3. O que é mais comum em marcas sustentáveis de moda?",
         alternativas: [
             {
                 texto: "Uso de tecidos orgânicos ou reciclados",
@@ -45,7 +45,7 @@ const perguntas = [
         ]
     },
     {
-        enunciado: "O que representa a moda atemporal?",
+        enunciado: "4. O que representa a moda atemporal?",
         alternativas: [
             {
                 texto: "Roupas que seguem tendências rápidas e momentâneas",
@@ -58,55 +58,67 @@ const perguntas = [
         ]
     },
     {
-        enunciado: "O que é mais valorizado na moda slow fashion?",
+        enunciado: "5. O que é mais valorizado na moda slow fashion?",
         alternativas: [
             {
                 texto: "Quantidade e variedade de roupas baratas",
                 afirmacao: "errado"
             },
             {
-                texto: " Qualidade, durabilidade e respeito ao meio ambiente",
-                afirmacao: "correto "
+                texto: "Qualidade, durabilidade e respeito ao meio ambiente",
+                afirmacao: "correto"
             }
         ]
-    },
+    }
 ];
 
-
 let atual = 0;
-let perguntaAtual;
 let historiaFinal = "";
+let contadorA = 0;
+let contadorB = 0;
 
 function mostraPergunta() {
     if (atual >= perguntas.length) {
         mostraResultado();
         return;
     }
-    perguntaAtual = perguntas[atual];
+    const perguntaAtual = perguntas[atual];
     caixaPerguntas.textContent = perguntaAtual.enunciado;
     caixaAlternativas.textContent = "";
-    mostraAlternativas();
-}
 
-function mostraAlternativas(){
-    for(const alternativa of perguntaAtual.alternativas) {
-        const botaoAlternativas = document.createElement("button");
-        botaoAlternativas.textContent = alternativa.texto;
-        botaoAlternativas.addEventListener("click", () => respostaSelecionada(alternativa));
-        caixaAlternativas.appendChild(botaoAlternativas);
+    for (let i = 0; i < perguntaAtual.alternativas.length; i++) {
+        const alternativa = perguntaAtual.alternativas[i];
+        const botao = document.createElement("button");
+        botao.textContent = alternativa.texto;
+        botao.addEventListener("click", () => respostaSelecionada(alternativa, i));
+        caixaAlternativas.appendChild(botao);
     }
 }
 
-function respostaSelecionada(opcaoSelecionada) {
-    const afirmacoes = opcaoSelecionada.afirmacao;
-    historiaFinal += afirmacoes + " ";
+function respostaSelecionada(opcao, indice) {
+    historiaFinal += opcao.afirmacao + " ";
+    if (indice === 0) {
+        contadorA++;
+    } else {
+        contadorB++;
+    }
     atual++;
     mostraPergunta();
 }
 
 function mostraResultado() {
-    caixaPerguntas.textContent = "Em 2049...";
-    textoResultado.textContent = historiaFinal;
+    caixaPerguntas.textContent = "Resultado final:";
+
+    let destino = "";
+    if (contadorA > contadorB) {
+        destino = "\n\nVocê precisa estudar mais sobre moda sustentável e consciente.";
+    } else if (contadorB > contadorA) {
+        destino = "\n\nParabéns! Você demonstra conhecimento e alinhamento com os princípios da moda sustentável.";
+    } else {
+        destino = "\n\nVocê está no caminho certo, mas ainda pode aprofundar mais seu entendimento sobre moda consciente.";
+    }
+
+    textoResultado.textContent = historiaFinal.trim() + destino;
     caixaAlternativas.textContent = "";
 }
 
